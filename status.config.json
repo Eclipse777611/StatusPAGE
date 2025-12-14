@@ -20,8 +20,8 @@
   "overall": { "label": "Operational", "tone": "green" },
   "products": [
     {
-      "name": "Product1",
-      "desc": "Main API / Core features",
+      "name": "Paladium Cheat",
+      "desc": "Never Got detected",
       "status": { "label": "Functional", "tone": "green" },
       "edits": [
         { "when": "2025-12-14 00:41", "what": "Status changed: Updating → Functional" },
