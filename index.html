@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Eclipse Status</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header class="header">
+      <div class="logo"></div>
+      <div class="titles">
+        <h1>Eclipse Status</h1>
+        <p class="subtitle">Live service availability</p>
+      </div>
+      <div class="meta">
+        <div class="pill">Overall: <span class="ok">Operational</span></div>
+        <div class="small" id="updated"></div>
+      </div>
+    </header>
+
+    <section class="card">
+      <div class="cardTitle">Products</div>
+
+      <div class="row">
+        <div class="left">
+          <div class="name">Product1</div>
+          <div class="desc">Main API / Core features</div>
+        </div>
+        <div class="right">
+          <span class="badge green">Functional</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="left">
+          <div class="name">Product2</div>
+          <div class="desc">Deploy pipeline / CDN updates</div>
+        </div>
+        <div class="right">
+          <span class="badge orange">Updating</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="left">
+          <div class="name">Product3</div>
+          <div class="desc">Auth / Login</div>
+        </div>
+        <div class="right">
+          <span class="badge red">Down</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="left">
+          <div class="name">Product4</div>
+          <div class="desc">Script Hub</div>
+        </div>
+        <div class="right">
+          <span class="badge gray">Maintenance</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="cardTitle">Notes</div>
+      <div class="note">
+        • If a product is <span class="orange">Updating</span>, expect short interruptions.<br/>
+        • If it’s <span class="red">Down</span>, we’re actively working on it.
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const el = document.getElementById("updated");
+    const now = new Date();
+    el.textContent = "Last updated: " + now.toLocaleString();
+  </script>
+</body>
+</html>
