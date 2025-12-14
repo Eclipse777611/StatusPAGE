@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Eclipse Status</title>
+  <title>Status</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -11,72 +11,34 @@
     <header class="header">
       <div class="logo"></div>
       <div class="titles">
-        <h1>Eclipse Status</h1>
-        <p class="subtitle">Live service availability</p>
+        <h1 id="title">Eclipse Status</h1>
+        <p id="subtitle" class="subtitle">Live service availability</p>
       </div>
+
       <div class="meta">
-        <div class="pill">Overall: <span class="ok">Operational</span></div>
-        <div class="small" id="updated"></div>
+        <div class="pill">Overall: <span id="overall" class="overall">Operational</span></div>
+        <div class="small" id="lastUpdated"></div>
       </div>
     </header>
 
-    <section class="card">
-      <div class="cardTitle">Products</div>
+    <main class="grid" id="grid"></main>
 
-      <div class="row">
-        <div class="left">
-          <div class="name">Product1</div>
-          <div class="desc">Main API / Core features</div>
-        </div>
-        <div class="right">
-          <span class="badge green">Functional</span>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="left">
-          <div class="name">Product2</div>
-          <div class="desc">Deploy pipeline / CDN updates</div>
-        </div>
-        <div class="right">
-          <span class="badge orange">Updating</span>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="left">
-          <div class="name">Product3</div>
-          <div class="desc">Auth / Login</div>
-        </div>
-        <div class="right">
-          <span class="badge red">Down</span>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="left">
-          <div class="name">Product4</div>
-          <div class="desc">Script Hub</div>
-        </div>
-        <div class="right">
-          <span class="badge gray">Maintenance</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="cardTitle">Notes</div>
-      <div class="note">
-        • If a product is <span class="orange">Updating</span>, expect short interruptions.<br/>
-        • If it’s <span class="red">Down</span>, we’re actively working on it.
-      </div>
-    </section>
+    <footer class="footer">
+      <div class="hint">Hover a product to see the latest edits.</div>
+      <div class="hint small">Config: <code>status.config.json</code></div>
+    </footer>
   </div>
 
-  <script>
-    const el = document.getElementById("updated");
-    const now = new Date();
-    el.textContent = "Last updated: " + now.toLocaleString();
-  </script>
+  <!-- Hover panel -->
+  <div id="hoverPanel" class="hoverPanel" aria-hidden="true">
+    <div class="hpTitleRow">
+      <div class="hpName" id="hpName">Product</div>
+      <span class="badge" id="hpBadge">Status</span>
+    </div>
+    <div class="hpSub" id="hpSub">Last edits</div>
+    <div class="hpList" id="hpList"></div>
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>

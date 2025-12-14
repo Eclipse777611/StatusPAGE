@@ -1,0 +1,58 @@
+{
+  "page": {
+    "title": "Eclipse Status",
+    "subtitle": "Live service availability"
+  },
+  "ui": {
+    "columns": 2,
+    "animations": true,
+    "showEditsCount": 3
+  },
+  "theme": {
+    "accent": "#A704D8",
+    "accent2": "#9933FF",
+    "text": "#BDBDBD",
+    "muted": "#999999",
+    "bg": "#0c0c0c",
+    "surface": "#141414",
+    "border": "#151515"
+  },
+  "overall": { "label": "Operational", "tone": "green" },
+  "products": [
+    {
+      "name": "Product1",
+      "desc": "Main API / Core features",
+      "status": { "label": "Functional", "tone": "green" },
+      "edits": [
+        { "when": "2025-12-14 00:41", "what": "Status changed: Updating → Functional" },
+        { "when": "2025-12-13 21:10", "what": "Minor latency resolved" }
+      ]
+    },
+    {
+      "name": "Product2",
+      "desc": "Deploy pipeline / CDN updates",
+      "status": { "label": "Updating", "tone": "orange" },
+      "edits": [
+        { "when": "2025-12-14 00:10", "what": "Rolling update started (v1.4.2)" },
+        { "when": "2025-12-14 00:02", "what": "Short maintenance window announced" }
+      ]
+    },
+    {
+      "name": "Product3",
+      "desc": "Auth / Login",
+      "status": { "label": "Down", "tone": "red" },
+      "edits": [
+        { "when": "2025-12-14 00:33", "what": "Incident detected: 500 errors" },
+        { "when": "2025-12-14 00:35", "what": "Mitigation in progress" }
+      ]
+    },
+    {
+      "name": "Product4",
+      "desc": "Script Hub",
+      "status": { "label": "Maintenance", "tone": "gray" },
+      "edits": [
+        { "when": "2025-12-13 23:55", "what": "DB maintenance scheduled" }
+      ]
+    }
+  ]
+}
