@@ -29,9 +29,9 @@
       ]
     },
     {
-      "name": "Product2",
-      "desc": "Deploy pipeline / CDN updates",
-      "status": { "label": "Updating", "tone": "orange" },
+      "name": "Cheat B07",
+      "desc": "Detected Delay",
+      "status": { "label": "Detected", "tone": "orange" },
       "edits": [
         { "when": "2025-12-14 00:10", "what": "Rolling update started (v1.4.2)" },
         { "when": "2025-12-14 00:02", "what": "Short maintenance window announced" }
