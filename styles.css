@@ -218,3 +218,23 @@ code{color: var(--accent2); font-weight:700}
   from{ transform: translateY(6px); opacity: 0; }
   to{ transform: translateY(0); opacity: 1; }
 }
+.boot{
+  position:fixed; inset:0;
+  background:#0c0c0c;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  z-index:9999;
+}
+.bootDot{
+  width:10px;height:10px;border-radius:999px;
+  background:#9933FF;
+  box-shadow:0 0 20px rgba(153,51,255,.6);
+  animation: pulse .9s ease-in-out infinite;
+}
+.bootText{color:#BDBDBD; font-size:12px; opacity:.9}
+@keyframes pulse{
+  0%,100%{transform:scale(1); opacity:.7}
+  50%{transform:scale(1.6); opacity:1}
+}
