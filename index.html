@@ -1,18 +1,26 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Eclipse Status</title>
+
+  <!-- Prevent white flash BEFORE CSS loads -->
   <style>
     html,body{height:100%; margin:0;}
     body{background:#0c0c0c; overflow:hidden;}
   </style>
-  <link rel="stylesheet" href="styles.css" />
 
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Status</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
+  <!-- Boot overlay to avoid blank feel while JSON loads -->
+  <div id="boot" class="boot">
+    <div class="bootDot"></div>
+    <div class="bootText">Loading…</div>
+  </div>
+
   <div class="wrap">
     <header class="header">
       <div class="logo"></div>
@@ -22,15 +30,26 @@
       </div>
 
       <div class="meta">
-        <div class="pill">Overall: <span id="overall" class="overall">Operational</span></div>
-        <div class="small" id="lastUpdated"></div>
+        <div class="pill">Overall: <span id="overall" class="overall green">Operational</span></div>
+        <div class="small" id="lastUpdated">Last updated: —</div>
       </div>
     </header>
 
-    <main class="grid" id="grid"></main>
+    <!-- Fallback content so body is NEVER empty -->
+    <main class="grid" id="grid">
+      <div class="card">
+        <div class="cardContent">
+          <div class="rowTop">
+            <div class="name">Loading…</div>
+            <span class="badge gray">Waiting</span>
+          </div>
+          <div class="desc">If this stays, open DevTools (F12) → Console/Network.</div>
+        </div>
+      </div>
+    </main>
 
     <footer class="footer">
-      <div class="hint">Hover a product to see the latest edits.</div>
+      <div class="hint">Hover a product to see the latest edits + preview image.</div>
       <div class="hint small">Config: <code>status.config.json</code></div>
     </footer>
   </div>
@@ -39,12 +58,12 @@
   <div id="hoverPanel" class="hoverPanel" aria-hidden="true">
     <div class="hpTitleRow">
       <div class="hpName" id="hpName">Product</div>
-      <span class="badge" id="hpBadge">Status</span>
+      <span class="badge gray" id="hpBadge">Status</span>
     </div>
     <div class="hpSub" id="hpSub">Last edits</div>
     <div class="hpList" id="hpList"></div>
   </div>
 
-  <script src="app.js"></script>
+  <script src="app.js" defer></script>
 </body>
 </html>

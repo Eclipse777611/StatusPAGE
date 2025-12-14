@@ -5,10 +5,12 @@ const hoverPanel = document.getElementById("hoverPanel");
 const hpName = document.getElementById("hpName");
 const hpBadge = document.getElementById("hpBadge");
 const hpList = document.getElementById("hpList");
+
 const titleEl = document.getElementById("title");
 const subtitleEl = document.getElementById("subtitle");
 const lastUpdatedEl = document.getElementById("lastUpdated");
 const overallEl = document.getElementById("overall");
+const boot = document.getElementById("boot");
 
 let cfg = null;
 let mouseX = 0, mouseY = 0;
@@ -20,13 +22,13 @@ function setCssVar(name, value){
 
 function applyTheme(theme, ui){
   if(theme){
-    setCssVar("--accent", theme.accent);
-    setCssVar("--accent2", theme.accent2);
-    setCssVar("--text", theme.text);
-    setCssVar("--muted", theme.muted);
-    setCssVar("--bg", theme.bg);
-    setCssVar("--surface", theme.surface);
-    setCssVar("--border", theme.border);
+    if(theme.accent)  setCssVar("--accent", theme.accent);
+    if(theme.accent2) setCssVar("--accent2", theme.accent2);
+    if(theme.text)    setCssVar("--text", theme.text);
+    if(theme.muted)   setCssVar("--muted", theme.muted);
+    if(theme.bg)      setCssVar("--bg", theme.bg);
+    if(theme.surface) setCssVar("--surface", theme.surface);
+    if(theme.border)  setCssVar("--border", theme.border);
   }
   if(ui){
     setCssVar("--cols", String(ui.columns ?? 2));
@@ -39,8 +41,10 @@ function badgeClass(tone){
 }
 
 function setOverall(overall){
-  overallEl.textContent = overall?.label ?? "Operational";
-  overallEl.className = `overall ${badgeClass(overall?.tone ?? "green")}`;
+  const label = overall?.label ?? "Operational";
+  const tone  = badgeClass(overall?.tone ?? "green");
+  overallEl.textContent = label;
+  overallEl.className = `overall ${tone}`;
 }
 
 function clampToViewport(x, y, w, h, pad=12){
@@ -55,11 +59,13 @@ function clampToViewport(x, y, w, h, pad=12){
 function schedulePanelMove(){
   if(rafPending) return;
   rafPending = true;
+
   requestAnimationFrame(() => {
     rafPending = false;
 
     const rect = hoverPanel.getBoundingClientRect();
     const pos = clampToViewport(mouseX + 14, mouseY + 14, rect.width, rect.height);
+
     hoverPanel.style.left = `${pos.x}px`;
     hoverPanel.style.top  = `${pos.y}px`;
   });
@@ -71,15 +77,25 @@ window.addEventListener("mousemove", (e) => {
   if(hoverPanel.classList.contains("show")) schedulePanelMove();
 });
 
+function escapeHtml(s){
+  return String(s ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
 function showPanel(product){
   const editsCount = cfg?.ui?.showEditsCount ?? 3;
 
-  hpName.textContent = product.name;
-  hpBadge.textContent = product.status.label;
-  hpBadge.className = `badge ${badgeClass(product.status.tone)}`;
+  hpName.textContent = product.name ?? "Product";
+  hpBadge.textContent = product.status?.label ?? "Unknown";
+  hpBadge.className = `badge ${badgeClass(product.status?.tone)}`;
 
   hpList.innerHTML = "";
   const edits = (product.edits ?? []).slice(0, editsCount);
+
   if(edits.length === 0){
     hpList.innerHTML = `<div class="hpItem"><div class="hpWhat">No edits yet.</div></div>`;
   } else {
@@ -88,8 +104,8 @@ function showPanel(product){
       item.className = "hpItem";
       item.innerHTML = `
         <div class="hpLine1">
-          <div class="hpWhat">${escapeHtml(e.what ?? "")}</div>
-          <div class="hpWhen">${escapeHtml(e.when ?? "")}</div>
+          <div class="hpWhat">${escapeHtml(e.what)}</div>
+          <div class="hpWhen">${escapeHtml(e.when)}</div>
         </div>
       `;
       hpList.appendChild(item);
@@ -106,19 +122,21 @@ function hidePanel(){
   hoverPanel.setAttribute("aria-hidden", "true");
 }
 
-function escapeHtml(s){
-  return String(s)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+function setLastUpdated(){
+  const now = new Date();
+  lastUpdatedEl.textContent = "Last updated: " + now.toLocaleString();
 }
 
+/**
+ * Render cards. Each product may have:
+ * - name, desc
+ * - status: { label, tone }
+ * - preview: "images/xxx.png"  (optional)
+ */
 function render(products){
   grid.innerHTML = "";
 
-  // If you add many products, auto-increase columns to reduce vertical height (helps no-scroll)
+  // auto adjust columns to reduce vertical height (helps no-scroll)
   const baseCols = cfg?.ui?.columns ?? 2;
   const suggestedCols = Math.min(4, Math.max(baseCols, Math.ceil((products.length || 1) / 4)));
   setCssVar("--cols", String(suggestedCols));
@@ -127,12 +145,26 @@ function render(products){
     const card = document.createElement("div");
     card.className = "card";
 
+    // Preview image CSS var
+    const preview = (p.preview || "").trim();
+    if(preview){
+      card.style.setProperty("--preview", `url("${preview}")`);
+    } else {
+      card.classList.add("noPreview");
+      card.style.setProperty("--preview", "none");
+    }
+
     card.innerHTML = `
-      <div class="rowTop">
-        <div class="name">${escapeHtml(p.name)}</div>
-        <span class="badge ${badgeClass(p.status?.tone)}">${escapeHtml(p.status?.label ?? "Unknown")}</span>
+      <div class="cardBg"></div>
+      <div class="cardShade"></div>
+
+      <div class="cardContent">
+        <div class="rowTop">
+          <div class="name">${escapeHtml(p.name)}</div>
+          <span class="badge ${badgeClass(p.status?.tone)}">${escapeHtml(p.status?.label ?? "Unknown")}</span>
+        </div>
+        <div class="desc">${escapeHtml(p.desc ?? "")}</div>
       </div>
-      <div class="desc">${escapeHtml(p.desc ?? "")}</div>
     `;
 
     card.addEventListener("mouseenter", () => showPanel(p));
@@ -145,34 +177,31 @@ function render(products){
 
 async function loadConfig(){
   const res = await fetch(CONFIG_PATH, { cache: "no-store" });
-  if(!res.ok) throw new Error(`Failed to load ${CONFIG_PATH}: ${res.status}`);
+  if(!res.ok) throw new Error(`Failed to load ${CONFIG_PATH}: HTTP ${res.status}`);
   return await res.json();
 }
 
-function setLastUpdated(){
-  const now = new Date();
-  lastUpdatedEl.textContent = "Last updated: " + now.toLocaleString();
-}
-
-(async function init(){
+async function init(){
   try{
     cfg = await loadConfig();
 
-    // Title/subtitle
+    // title/subtitle
     titleEl.textContent = cfg.page?.title ?? "Status";
     subtitleEl.textContent = cfg.page?.subtitle ?? "";
 
-    // Theme/UI
+    // theme/ui
     applyTheme(cfg.theme, cfg.ui);
 
-    // Overall
+    // overall
     setOverall(cfg.overall);
 
-    // Render products
+    // products
     render(cfg.products ?? []);
     setLastUpdated();
 
-    // Refresh (optional)
+    boot?.remove();
+
+    // optional refresh
     const refreshMs = cfg.ui?.refreshMs;
     if(Number.isFinite(refreshMs) && refreshMs > 1000){
       setInterval(async () => {
@@ -184,6 +213,20 @@ function setLastUpdated(){
       }, refreshMs);
     }
   } catch (err){
-    grid.innerHTML = `<div class="card"><div class="name">Config error</div><div class="desc">${escapeHtml(err.message)}</div></div>`;
+    boot?.remove();
+    grid.innerHTML = `
+      <div class="card">
+        <div class="cardContent">
+          <div class="rowTop">
+            <div class="name">Config / Load error</div>
+            <span class="badge red">Error</span>
+          </div>
+          <div class="desc">${escapeHtml(err.message)}</div>
+          <div class="desc">Check filenames + case: <b>status.config.json</b>, <b>app.js</b>, <b>styles.css</b>.</div>
+        </div>
+      </div>
+    `;
   }
-})();
+}
+
+init();
