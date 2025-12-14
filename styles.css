@@ -107,6 +107,51 @@ body{
     transform calc(.15s * var(--anim)) ease,
     box-shadow calc(.15s * var(--anim)) ease,
     border-color calc(.15s * var(--anim)) ease;
+} 
+/* preview image layer */
+.cardBg{
+  position:absolute;
+  inset:0;
+  background-image: var(--preview);
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transform: scale(1.10);
+  transition:
+    opacity calc(.18s * var(--anim)) ease,
+    transform calc(.26s * var(--anim)) ease;
+  filter: saturate(1.1) contrast(1.05);
+}
+
+/* dark overlay so text stays readable */
+.cardShade{
+  position:absolute;
+  inset:0;
+  opacity: 0;
+  transition: opacity calc(.18s * var(--anim)) ease;
+  background:
+    linear-gradient(180deg, rgba(12,12,12,.75), rgba(12,12,12,.25)),
+    radial-gradient(700px 260px at 30% 10%, rgba(153,51,255,.18), transparent 60%);
+}
+
+.cardContent{
+  position: relative;
+  z-index: 2;
+}
+
+/* show image on hover */
+.card:hover .cardBg{
+  opacity: .28;      /* increase if you want more visible */
+  transform: scale(1.02);
+}
+.card:hover .cardShade{
+  opacity: 1;
+}
+
+/* if no preview image */
+.card.noPreview .cardBg,
+.card.noPreview .cardShade{
+  display:none;
 }
 .card::after{
   content:"";
@@ -117,11 +162,7 @@ body{
   box-shadow: 0 0 0 1px rgba(167,4,216,.10), 0 0 26px rgba(153,51,255,.10);
   transition: opacity calc(.15s * var(--anim)) ease;
 }
-.card:hover{
-  transform: translateY(-2px);
-  border-color: rgba(167,4,216,.25);
-}
-.card:hover::after{ opacity:1; }
+
 .card:active{ transform: translateY(0) scale(.99); }
 
 .rowTop{

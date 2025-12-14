@@ -114,7 +114,13 @@ function escapeHtml(s){
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
 }
-
+const preview = (p.preview || "").trim();
+if (preview) {
+  card.style.setProperty("--preview", `url("${preview}")`);
+} else {
+  card.classList.add("noPreview");
+  card.style.setProperty("--preview", "none");
+}
 function render(products){
   grid.innerHTML = "";
 
@@ -127,13 +133,18 @@ function render(products){
     const card = document.createElement("div");
     card.className = "card";
 
-    card.innerHTML = `
-      <div class="rowTop">
-        <div class="name">${escapeHtml(p.name)}</div>
-        <span class="badge ${badgeClass(p.status?.tone)}">${escapeHtml(p.status?.label ?? "Unknown")}</span>
-      </div>
-      <div class="desc">${escapeHtml(p.desc ?? "")}</div>
-    `;
+card.innerHTML = `
+  <div class="cardBg"></div>
+  <div class="cardShade"></div>
+
+  <div class="cardContent">
+    <div class="rowTop">
+      <div class="name">${escapeHtml(p.name)}</div>
+      <span class="badge ${badgeClass(p.status?.tone)}">${escapeHtml(p.status?.label ?? "Unknown")}</span>
+    </div>
+    <div class="desc">${escapeHtml(p.desc ?? "")}</div>
+  </div>
+`;
 
     card.addEventListener("mouseenter", () => showPanel(p));
     card.addEventListener("mouseleave", hidePanel);
